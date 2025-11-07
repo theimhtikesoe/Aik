@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>AIK Photography</title>
+<script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.90/build/spline-viewer.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* 1. Global Reset & Base */
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'Poppins', sans-serif;
+}
+html {
+scroll-behavior: smooth;
+}
+body {
+min-height: 100vh;
+width: 100%;
+background-color: #E3E3E3; /* Fallback color */
+display: flex;
+flex-direction: column;
+overflow-x: hidden;
+color: #333; /* Default text color */
+}
+
+/* 2. 3D Spline Background */
+.spline-background {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: 1; /* Sits behind all other content */
+}
+.spline-background spline-viewer {
+width: 100%;
+height: 100%;
+border: none;
+}
+
+/* 3. Top Navigation Bar */
+.top {
+width: 100%;
+padding: 16px 40px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+background: rgba(255, 255, 255, 0.2); /* Premium: Slightly cleaner glass */
+backdrop-filter: blur(12px);
+position: fixed;
+top: 0;
+left: 0;
+z-index: 100; /* Sits on top of all content */
+border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+.logo {
+font-weight: 700;
+font-size: 1.5rem;
+color: #111;
+letter-spacing: 1.5px; /* Premium: More spaced */
+cursor: pointer; /* <-- Important for the surprise */
+}
+nav {
+display: flex;
+gap: 30px;
+}
+nav a {
+text-decoration: none;
+color: #111;
+font-weight: 500;
+transition: 0.3s ease; /* Premium: Smooth transition for all properties */
+font-size: 0.9rem;
+}
+nav a:hover {
+color: #ff3366; /* Kept your brand pink */
+}
+
+/* 4. Main Content Wrapper (for panels) */
+.main-content {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+width: 100%;
+max-width: 1400px;
+margin: 0 auto;
+flex: 1;
+padding: 110px 40px 40px 40px; /* Premium: More top padding */
+min-height: 100vh;
+position: relative;
+z-index: 10;
+pointer-events: none;
+}
+
+/* 5. Floating Panel Styling (Common) */
+.panel {
+pointer-events: auto;
+padding: 30px;
+display: flex;
+flex-direction: column;
+flex: 0 1 320px; /* Narrower for center content */
+height: fit-content;
+
+/* Premium: Refined Glass */
+background: rgba(255, 255, 255, 0.4);
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255, 255, 255, 0.5);
+border-radius: 12px;
+box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08); /* Premium: Softer shadow */
+
+/* Premium: Smooth transition for hover, scroll, etc. */
+transition: transform 0.4s ease, box-shadow 0.4s ease, opacity 0.6s ease-out, transform 0.6s ease-out;
+
+/* Anchor link fix */
+scroll-margin-top: 110px;
+}
+.panel h2 {
+font-size: 1.8rem;
+font-weight: 600;
+color: #111;
+letter-spacing: 0.5px; /* Premium: Slight spacing */
+margin-bottom: 20px;
+border-bottom: 2px solid #ff3366;
+padding-bottom: 8px;
+display: inline-block;
+}
+.panel p {
+color: #444; /* Premium: Softer than pure black */
+line-height: 1.7; /* Premium: More breathable */
+}
+
+/* 6. Panel-Specific Content */
+.social-links {
+margin-top: 24px;
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+.social-links a {
+text-decoration: none;
+color: #111;
+font-weight: 500;
+padding: 10px 15px;
+border-radius: 6px;
+background: rgba(255, 255, 255, 0.5);
+/* Premium: Smooth transition */
+transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+}
+.social-links a:hover {
+background: #ff3366;
+color: #fff;
+}
+.project-grid {
+display: grid;
+grid-template-columns: 1fr; /* Stack links vertically */
+gap: 20px; /* Space between links */
+}
+
+.project-item {
+display: flex; /* Use flex to center text */
+justify-content: center;
+align-items: center;
+text-decoration: none; /* Remove underline from link */
+
+width: 100%;
+aspect-ratio: 16 / 9; /* Perfect 16:9 ratio */
+background-color: #333; /* Placeholder background */
+/* Using a placeholder image */
+background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://via.placeholder.com/560x315/111/EEE?text=Video+Project');
+background-size: cover;
+background-position: center;
+
+border-radius: 8px;
+overflow: hidden;
+cursor: pointer;
+transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+
+/* Text styling */
+color: #fff;
+font-weight: 600;
+font-size: 1.1rem;
+text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.project-item:hover {
+transform: scale(1.02); /* Made hover effect more subtle */
+box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* 7. Footer */
+.footer {
+width: 100%;
+text-align: center;
+padding: 25px 0;
+background: #1a1a1a; /* Premium: Darker, more elegant */
+color: #aaa; /* Premium: Softer text color */
+font-size: 0.9rem;
+position: relative;
+z-index: 10;
+/* Added for JS animation */
+transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* 8. Responsive Design (Mobile) */
+@media (max-width: 900px) {
+/* Stack panels on tablets and smaller */
+.main-content {
+flex-direction: column;
+align-items: center;
+gap: 30px;
+}
+.panel {
+flex-basis: auto;
+width: 90%;
+max-width: 500px;
+/* Reset flex-basis for stacked layout */
+flex-basis: auto;
+}
+.project-grid {
+grid-template-columns: 1fr;
+}
+}
+
+@media (max-width: 768px) {
+/* Adjust navbar for small phones */
+.top {
+flex-direction: column;
+gap: 10px;
+padding: 15px;
+}
+nav {
+gap: 15px;
+flex-wrap: wrap;
+justify-content: center;
+}
+/* Adjust main content padding for taller mobile navbar */
+.main-content {
+padding-top: 140px; /* Match new scroll margin */
+padding-left: 15px;
+padding-right: 15px;
+gap: 20px;
+}
+.panel {
+width: 95%;
+scroll-margin-top: 140px; /* Match new padding */
+}
+}
+
+/* 9. Premium: Desktop-Only Hover Effects */
+/* (Disables hover transforms on touch screens) */
+@media (hover: hover) and (min-width: 901px) {
+.panel:hover {
+transform: translateY(-6px);
+box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+nav a:hover {
+transform: translateY(-2px);
+color: #ff3366;
+}
+.social-links a:hover {
+transform: scale(1.03);
+background: #ff3366;
+color: #fff;
+}
+}
+
+/* 10. JS-based Animation Styles */
+.hidden {
+opacity: 0;
+transform: translateY(30px);
+}
+nav a.active {
+color: #ff3366;
+font-weight: 600;
+}
+
+/* ================================
+  💡 11. SURPRISE FEATURE CSS 💡
+  ================================
+*/
+.modal-overlay {
+display: none; /* Hidden by default */
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.5); /* Dimming overlay */
+backdrop-filter: blur(4px);
+z-index: 1000;
+opacity: 0;
+transition: opacity 0.3s ease;
+}
+.modal-content {
+display: none; /* Hidden by default */
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%) scale(0.9);
+z-index: 1001;
+
+/* Matching frosted glass style */
+background: rgba(255, 255, 255, 0.4);
+backdrop-filter: blur(15px);
+border: 1px solid rgba(255, 255, 255, 0.5);
+border-radius: 12px;
+box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+padding: 30px 40px;
+text-align: center;
+color: #111;
+opacity: 0;
+transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.modal-content.open {
+display: block;
+opacity: 1;
+transform: translate(-50%, -50%) scale(1);
+}
+.modal-overlay.open {
+display: block;
+opacity: 1;
+}
+.modal-content .close-btn {
+position: absolute;
+top: 10px;
+right: 15px;
+font-size: 2rem;
+color: #333;
+cursor: pointer;
+transition: 0.2s;
+}
+.modal-content .close-btn:hover {
+color: #ff3366;
+}
+.modal-content h3 {
+font-size: 1.5rem;
+font-weight: 600;
+margin-bottom: 10px;
+}
+.modal-content .credits-link {
+display: inline-block;
+text-decoration: none;
+color: #111;
+font-weight: 500;
+padding: 10px 20px;
+border-radius: 6px;
+background: rgba(255, 255, 255, 0.5);
+margin-top: 20px;
+transition: 0.3s;
+}
+.modal-content .credits-link:hover {
+background: #ff3366;
+color: #fff;
+}
+
+</style>
+</head>
+<body>
+
+<div class="spline-background">
+<spline-viewer url="https://prod.spline.design/M-UGUQpOGF98Sj6y/scene.splinecode">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUEUgAAAGQAAAAzCAYAAABhaa0bAAAPB0lEQVR4AbycuZIc1daF8+vLPBOAxWjiY2HxBDwBDi4mHi4ONgY2EdgENoELJoEHFhpAoAHNEvMg8q/vpFbVrtOZ1dW6+m8Fq9eez9l7d1a1dNX34ObNm6O4cePGeP369fHq1avj5cuXx4sXL44XLlwYz58/P549e3b88ccfxx9++KFBWdu5c+dajLHmmHvt2rVWx1rK2i5dutTqnDlzZjxx4sT4zTffjF999dX4xRdfjJ999tn4ySefjB999NH4wQcfjO+99974zjvvjG+99db4xhtvjK+//vr42muvja+88sr48ssvjy+99NL43HPPNTz//PPjiy++2GwvvPDC+Oyzz45PPfXUeHBwMA4..." alt="Spline preview" style="width: 100%; height: 100%;" />
+</spline-viewer>
+</div>
+
+<div class="top">
+<div class="logo">AIK</div>
+<nav>
+<a href="https://web.facebook.com/sainoom.orn" target="_blank">Facebook</a>
+<a href="https://www.youtube.com/@aiknoom369" target="_blank">YouTube</a>
+<a href="#about">About</a>
+<a href="#projects">Projects</a>
+</nav>
+</div>
+
+<div class="main-content">
+
+<div class="panel left-panel" id="about">
+<h2>About Aik</h2>
+<p>
+Freelance photographer & videographer since <strong>2019</strong>.
+Capturing moments with a unique, cinematic style.
+</p>
+<div class="social-links">
+<a href="https://web.facebook.com/sainoom.orn" target="_blank">Main Facebook</a>
+<a href="https://web.facebook.com/profile.php?id=100063888824331" target="_blank">Photography Page</a>
+<a href="https://www.youtube.com/@aiknoom369" target="_blank">YouTube Channel</a>
+</div>
+</div>
+
+<div class="panel right-panel" id="projects">
+<h2>Projects</h2>
+<div class="project-grid">
+<a class="project-item" 
+   href="https://www.youtube.com/watch?v=GZjY95-VBsM" 
+   target="_blank" 
+   rel="noopener noreferrer"
+   style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://img.youtube.com/vi/GZjY95-VBsM/hqdefault.jpg');">
+   <span>► Play Video 1</span>
+</a>
+<a class="project-item" 
+   href="https://www.youtube.com/watch?v=q4X2-BJKqUo" 
+   target="_blank" 
+   rel="noopener noreferrer"
+   style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://img.youtube.com/vi/q4X2-BJKqUo/hqdefault.jpg');">
+   <span>► Play Video 2</span>
+</a>
+</div>
+</div>
+
+</div>
+
+<footer class="footer">
+<p>&copy; 2025 AIK Photography. All rights reserved.</p>
+</footer>
+
+<div class="modal-overlay" id="credits-overlay"></div>
+<div class="modal-content" id="credits-modal">
+<span class="close-btn" id="close-modal-btn">&times;</span>
+<h3>Website Crafted By</h3>
+<p>လချစ်ရာ (Rhyzoe)</p>
+<a href="https://your-link-here.com" target="_blank" rel="noopener noreferrer" class="credits-link">
+Dev x Artist
+</a>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+// --- 1. Scroll Fade-in Animation ---
+const observerOptions = {
+root: null,
+rootMargin: '0px',
+threshold: 0.1
+};
+const observerCallback = (entries, observer) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.remove('hidden');
+observer.unobserve(entry.target);
+}
+});
+};
+const fadeInObserver = new IntersectionObserver(observerCallback, observerOptions);
+const hiddenElements = document.querySelectorAll('.panel, .footer');
+hiddenElements.forEach(el => {
+el.classList.add('hidden');
+fadeInObserver.observe(el);
+});
+
+// --- 2. Active Nav Link Highlighting ---
+const navLinks = document.querySelectorAll('nav a[href^="#"]');
+const sections = document.querySelectorAll('.panel[id]');
+const navObserverOptions = {
+rootMargin: '-40% 0px -60% 0px',
+threshold: 0
+};
+const navObserverCallback = (entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+const id = entry.target.getAttribute('id');
+navLinks.forEach(link => link.classList.remove('active'));
+const activeLink = document.querySelector(`nav a[href="#${id}"]`);
+if (activeLink) {
+activeLink.classList.add('active');
+}
+}
+});
+};
+const navObserver = new IntersectionObserver(navObserverCallback, navObserverOptions);
+sections.forEach(section => navObserver.observe(section));
+
+/* ================================
+  💡 3. SURPRISE FEATURE JS 💡
+  (Triggers the credits modal)
+  ================================
+*/
+const logo = document.querySelector('.logo');
+const modal = document.getElementById('credits-modal');
+const overlay = document.getElementById('credits-overlay');
+const closeModalBtn = document.getElementById('close-modal-btn');
+
+function openModal() {
+modal.classList.add('open');
+overlay.classList.add('open');
+}
+
+function closeModal() {
+modal.classList.remove('open');
+overlay.classList.remove('open');
+}
+
+logo.addEventListener('click', openModal);
+closeModalBtn.addEventListener('click', closeModal);
+overlay.addEventListener('click', closeModal);
+
+});
+</script>
+
+</body>
+</html>
